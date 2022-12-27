@@ -3,19 +3,17 @@ package com.example.composeproject
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.BoxScopeInstance.align
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScopeInstance.align
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -48,8 +46,13 @@ fun getColor(colorString: String): Color {
 
 @Composable
 fun loginPage(){
-    Column() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Title(size = 30.sp, text = "2nd Memory")
+        Image(painter = painterResource(R.drawable.applogobrain), contentDescription = "logoAppBrainWhite")
         Spacer(modifier = Modifier.height(40.dp))
         Button(onClick = { /*TODO*/ }) {
             
@@ -63,8 +66,9 @@ fun loginPage(){
 @Composable
 fun Title(size: TextUnit, text: String){
     Text(text="$text",
+        color= getColor("FFFFFF"),
         fontSize = size,
         fontStyle = FontStyle.Normal,
         fontWeight = FontWeight.Bold,
-    modifier = Modifier.align)
+    modifier = Modifier.padding(50.dp))
 }

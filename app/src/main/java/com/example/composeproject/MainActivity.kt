@@ -22,11 +22,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import coil.compose.AsyncImage
-import com.bumptech.glide.Glide
-import com.bumptech.glide.annotation.GlideModule
-import com.bumptech.glide.module.AppGlideModule;
 
-@GlideModule
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
