@@ -7,7 +7,7 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
-import com.example.composeproject.ArtCard
+import com.example.composeproject.model.ArtEntity
 
 class SQLiteHelper(context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
@@ -47,11 +47,11 @@ class SQLiteHelper(context: Context) :
         onCreate(db)
     }
 
-    fun addArt(art: ArtModel): Long {
+    fun addArt(art: ArtEntity): Long {
         val db = this.writableDatabase
 
         val contentValues = ContentValues()
-        contentValues.put(ID_COL, art.id)
+        contentValues.put(ID_COL, art.artId)
         contentValues.put(TITLE_COL, art.title)
         contentValues.put(AUTHOR_COL, art.author)
         contentValues.put(DESCRIPTION_COL, art.description)
@@ -66,8 +66,8 @@ class SQLiteHelper(context: Context) :
     }
 
     @SuppressLint("Range")
-    fun getAllAudio(): ArrayList<ArtModel> {
-        val result = ArrayList<ArtModel>()
+    fun getAllAudio(): ArrayList<ArtEntity> {
+        val result = ArrayList<ArtEntity>()
         val selectQuery = "SELECT * FROM $TBL_ART ORDER BY $CREATED_DATE_COL DESC"
         val db = this.readableDatabase
         val cursor: Cursor?
@@ -77,20 +77,18 @@ class SQLiteHelper(context: Context) :
 
             if (cursor.moveToFirst()) {
                 do {
-                    val id: String = cursor.getString(cursor.getColumnIndex(ID_COL))
+                    val id: Int = cursor.getInt(cursor.getColumnIndex(ID_COL))
                     val title: String = cursor.getString(cursor.getColumnIndex(TITLE_COL))
                     val author: String = cursor.getString(cursor.getColumnIndex(AUTHOR_COL))
                     val description: String = cursor.getString(cursor.getColumnIndex(DESCRIPTION_COL))
                     val mark: String = cursor.getString(cursor.getColumnIndex(MARK_COL))
                     val type: String = cursor.getString(cursor.getColumnIndex(TYPE_COL))
                     val state: String = cursor.getString(cursor.getColumnIndex(STATE_COL))
-                    val createdDate: String = cursor.getString(cursor.getColumnIndex(
-                        CREATED_DATE_COL))
 
 
                     result.add(
-                        ArtModel(
-                            id = id,
+                        ArtEntity(
+                            artId = id,
                             title = title,
                             author = author,
                             description = description,
@@ -149,10 +147,10 @@ class SQLiteHelper(context: Context) :
 //        return result
 //    }
 
-    fun deleteAudio(art: ArtModel): Int {
+    fun deleteAudio(art: ArtEntity): Int {
         val db = this.writableDatabase
 
-        val success = db.delete(TBL_ART, "id='${art.id}'", null)
+        val success = db.delete(TBL_ART, "id='${art.artId}'", null)
         db.close()
 
         return success

@@ -65,6 +65,13 @@ dependencies {
     //Import for async Image
     implementation 'io.coil-kt:coil-compose:2.2.2'
 
-    //Percentage for padding
-    implementation 'com.github.slaviboy:JetpackComposePercentageUnits:1.0.0'
+    //Room persistence library
+    var room_version = "2.4.3"
+
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    //Room test helper
+    testImplementation("androidx.room:room-testing:$room_version")
+
 }

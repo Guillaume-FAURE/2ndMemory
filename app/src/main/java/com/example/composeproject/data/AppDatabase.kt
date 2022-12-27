@@ -1,0 +1,25 @@
+package com.example.composeproject.data
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import com.example.composeproject.model.ArtEntity
+
+
+@Database(entities = [ArtEntity::class], version = 1)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun userDao(): ArtDAO
+
+    companion object {
+        private var INSTANCE: AppDatabase? = null
+        fun getInsance(context: Context): AppDatabase {
+            if (INSTANCE==null){
+                INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "art.db")
+                    .fallbackToDestructiveMigration()
+                    .build()
+            }
+            return INSTANCE as AppDatabase
+        }
+    }
+}

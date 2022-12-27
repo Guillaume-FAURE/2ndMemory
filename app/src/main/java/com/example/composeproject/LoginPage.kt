@@ -1,5 +1,6 @@
 package com.example.composeproject
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -13,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -46,6 +48,7 @@ fun getColor(colorString: String): Color {
 
 @Composable
 fun loginPage(){
+    val context= LocalContext.current
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -53,12 +56,15 @@ fun loginPage(){
     ) {
         Title(size = 30.sp, text = "2nd Memory")
         Image(painter = painterResource(R.drawable.applogobrain), contentDescription = "logoAppBrainWhite")
+        Spacer(modifier = Modifier.height(50.dp))
+        Button(onClick = {
+            context.startActivity(Intent(context, HomePage::class.java))
+        }) {
+            Text(text = "Log in")
+        }
         Spacer(modifier = Modifier.height(40.dp))
         Button(onClick = { /*TODO*/ }) {
-            
-        }
-        Button(onClick = { /*TODO*/ }) {
-            
+            Text(text = "Create new account")
         }
     }
 }
