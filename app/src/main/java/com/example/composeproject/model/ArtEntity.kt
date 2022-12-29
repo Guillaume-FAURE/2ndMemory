@@ -19,9 +19,6 @@ data class ArtEntity(
     @ColumnInfo(name = "createdDate") val createdDate:String? = getCreatedDate(),
 ) {
     companion object {
-        fun getUuid(): String {
-            return UUID.randomUUID().toString()
-        }
 
         fun getCreatedDate(): String {
             val formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd HH:MM:SS")

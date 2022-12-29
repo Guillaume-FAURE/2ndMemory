@@ -1,27 +1,18 @@
 package com.example.composeproject.data
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import com.example.composeproject.model.ArtEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface ArtDAO {
     @Query("SELECT * FROM art")
-    fun getAll(): List<ArtEntity>
-
-    @Query("SELECT * FROM art WHERE artId IN (:artIds)")
-    fun loadAllByIds(artIds: IntArray): List<ArtEntity>
-
-    @Query("SELECT * FROM art WHERE author LIKE :author AND " +
-            "title LIKE :title LIMIT 1")
-    fun findByAuthorTitle(author: String, title: String): ArtEntity
-
+    fun getAll(): Flow<List<ArtEntity>>
     @Insert
-    fun insertAll(vararg arts: ArtEntity)
-
+    suspend fun insert(art: ArtEntity)
+    @Update
+    suspend fun update(art: ArtEntity)
     @Delete
-    fun delete(art: ArtEntity)
+    suspend fun delete(art: ArtEntity)
 
 }

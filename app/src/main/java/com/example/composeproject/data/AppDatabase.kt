@@ -9,11 +9,11 @@ import com.example.composeproject.model.ArtEntity
 
 @Database(entities = [ArtEntity::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun userDao(): ArtDAO
+    abstract fun artDao(): ArtDAO
 
     companion object {
         private var INSTANCE: AppDatabase? = null
-        fun getInsance(context: Context): AppDatabase {
+        fun getInstance(context: Context): AppDatabase {
             if (INSTANCE==null){
                 INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "art.db")
                     .fallbackToDestructiveMigration()
