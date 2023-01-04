@@ -53,6 +53,7 @@ dependencies {
     // hilt di
     implementation "com.google.dagger:hilt-android:$hilt_version"
     implementation 'androidx.test:monitor:1.5.0'
+    implementation 'androidx.test.ext:junit-ktx:1.1.5'
     kapt "com.google.dagger:hilt-compiler:$hilt_version"
 
     // Room persistence library
@@ -90,11 +91,10 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
     //Room test helpers
     testImplementation "androidx.room:room-testing:$room_version"
+    testImplementation 'androidx.test:core:1.2.0'
     // Google Truth
     androidTestImplementation "com.google.truth:truth:$truth_version"
+    androidTestImplementation 'org.robolectric:robolectric:4.7.3'
     // Navigation menu
-    def nav_version = "2.5.3"
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
-
 }
