@@ -91,4 +91,9 @@ dependencies {
     testImplementation "androidx.room:room-testing:$room_version"
     // Google Truth
     androidTestImplementation "com.google.truth:truth:$truth_version"
+    // Navigation menu
+    def nav_version = "2.5.3"
+
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
 }
