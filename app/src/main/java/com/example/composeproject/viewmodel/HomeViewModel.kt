@@ -1,5 +1,8 @@
 package com.example.composeproject.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.composeproject.data.repository.ArtRepository
 import com.example.composeproject.model.ArtEntity
@@ -11,10 +14,11 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 interface HomeViewModelAbstract {
+    val selectedArtState: State<ArtEntity?>
     val artList: Flow<List<ArtEntity>>
-    fun addArt(art: ArtEntity)
-    fun updateArt(art: ArtEntity)
+    fun addOrUpdateArt(art: ArtEntity)
     fun deleteArt(art: ArtEntity)
+    fun selectArt(art: ArtEntity)
 }
 
 @HiltViewModel
@@ -23,18 +27,19 @@ class HomeViewModel
     private val artRepository: ArtRepository
 ): ViewModel(), HomeViewModelAbstract{
     private val ioScope = CoroutineScope(Dispatchers.IO)
-
+    private val _selectedArtState: MutableState<ArtEntity?> = mutableStateOf(null)
+    override val selectedArtState: State<ArtEntity?>
+        get() = _selectedArtState
     override val artList: Flow<List<ArtEntity>> = artRepository.getAll()
 
-    override fun addArt(art: ArtEntity) {
+    override fun addOrUpdateArt(art: ArtEntity) {
         ioScope.launch {
-            artRepository.insert(art = art)
-        }
-    }
-
-    override fun updateArt(art: ArtEntity) {
-        ioScope.launch {
-            artRepository.update(art = art)
+            if (art.artId == null){
+                artRepository.insert(art = art)
+            }
+            else {
+                artRepository.update(art = art)
+            }
         }
     }
 
@@ -42,5 +47,9 @@ class HomeViewModel
         ioScope.launch {
             artRepository.delete(art = art)
         }
+    }
+
+    override fun selectArt(art: ArtEntity) {
+        _selectedArtState.value = art
     }
 }

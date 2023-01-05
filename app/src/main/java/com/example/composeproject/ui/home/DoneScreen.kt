@@ -14,13 +14,12 @@ import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 
 @Composable
-fun HomeScreen(
+fun DoneScreen(
     homeViewModel: HomeViewModelAbstract,
     onClickArt: (ArtEntity) -> Unit,
     onClickHome: () -> Unit,
     onClickToDo: () -> Unit,
     onClickDone: () -> Unit,
-
 ){
     val artListState = homeViewModel.artList.collectAsState(initial = listOf())
     val textState = rememberSaveable { mutableStateOf("") }
@@ -41,7 +40,7 @@ fun HomeScreen(
                 horizontalAlignment = Alignment.CenterHorizontally) {
                 FirstNavBar()
                 SecondNavBar(
-                    1,
+                    2,
                     onClickHome,
                     onClickDone,
                     onClickToDo,
@@ -58,4 +57,3 @@ fun HomeScreen(
         }
     }
 }
-

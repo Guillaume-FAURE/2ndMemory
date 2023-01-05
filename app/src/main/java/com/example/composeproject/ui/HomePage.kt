@@ -14,7 +14,7 @@ class HomePage : ComponentActivity() {
 
         val homeViewModel: HomeViewModel by viewModels()
         setContent {
-            NoteRoomApp(homeViewModel)
+            NavControllerPage(homeViewModel)
         }
     }
 }

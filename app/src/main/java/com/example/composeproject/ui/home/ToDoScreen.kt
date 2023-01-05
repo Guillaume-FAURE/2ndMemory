@@ -14,7 +14,7 @@ import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 
 @Composable
-fun HomeScreen(
+fun ToDoScreen(
     homeViewModel: HomeViewModelAbstract,
     onClickArt: (ArtEntity) -> Unit,
     onClickHome: () -> Unit,
@@ -27,21 +27,24 @@ fun HomeScreen(
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
     Scaffold {
-        Column(modifier = Modifier
+        Column(
+            modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight()
+            .fillMaxHeight(1f)
             .background(MaterialTheme.colors.backgroundColor),
-        horizontalAlignment = Alignment.CenterHorizontally) {
-            Column(modifier = Modifier
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Column(
+                modifier = Modifier
                 .fillMaxWidth(1f)
                 .fillMaxHeight(1f)
                 .width(1.dp)
                 .border(1.dp, Color.Black),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally) {
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 FirstNavBar()
                 SecondNavBar(
-                    1,
+                    3,
                     onClickHome,
                     onClickDone,
                     onClickToDo,
@@ -53,9 +56,32 @@ fun HomeScreen(
                     homeViewModel,
                     onClickArt
                 )
-                Spacer(modifier = Modifier.padding(100.dp))
             }
         }
     }
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .fillMaxHeight(0.95f),
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.Bottom
+    ) {
+        Button(onClick = {
+            val art = ArtEntity(
+                author = "Unknown",
+                title = "",
+                description = "Unknown",
+                mark = "?/10",
+                state = "ToDo",
+                type = "Manga",
+            )
+            homeViewModel.selectArt(art)
+            onClickArt(art)
+        },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.Red
+            )) {
+            Text(text = "Add Art")
+        }
+    }
 }
-

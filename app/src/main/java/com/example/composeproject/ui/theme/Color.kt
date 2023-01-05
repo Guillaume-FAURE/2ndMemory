@@ -1,9 +1,7 @@
 package com.example.composeproject.ui.theme
 
-import android.graphics.Color.parseColor
 import androidx.compose.material.Colors
 import androidx.compose.ui.graphics.Color
-import androidx.core.graphics.toColorInt
 
 val Purple200 = Color(0xFFBB86FC)
 val Purple500 = Color(0xFF6200EE)
