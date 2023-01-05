@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import com.example.composeproject.R
 import com.example.composeproject.ui.theme.backgroundFirstNavBar
 import com.example.composeproject.ui.theme.backgroundSecondNavBar
+import com.example.composeproject.ui.theme.blackText
 
 @Composable
 fun FirstNavBar(){
@@ -50,7 +51,8 @@ fun FirstNavBar(){
             fontSize = 22.sp,
             fontWeight = FontWeight.Black,
             fontFamily = FontFamily.Default,
-            letterSpacing = 2.sp
+            letterSpacing = 2.sp,
+            color = MaterialTheme.colors.blackText,
         )
         OutlinedButton(onClick =
         { /* context.startActivity(Intent(context, ParameterPage::class.java)) */ },

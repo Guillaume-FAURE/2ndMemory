@@ -13,6 +13,7 @@ import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModelAbstract,
@@ -51,7 +52,8 @@ fun HomeScreen(
                     artIdState,
                     textState,
                     homeViewModel,
-                    onClickArt
+                    onClickArt,
+
                 )
                 Spacer(modifier = Modifier.padding(100.dp))
             }

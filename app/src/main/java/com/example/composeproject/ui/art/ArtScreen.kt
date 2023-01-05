@@ -5,8 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,6 +20,7 @@ import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.home.FirstNavBar
 import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.ui.theme.backgroundSecondNavBar
+import com.example.composeproject.ui.theme.blackText
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 
 @Composable
@@ -31,6 +31,12 @@ fun ArtScreen(
 ){
     val textState = rememberSaveable {
         mutableStateOf(art.title)
+    }
+    val typeState = rememberSaveable {
+        mutableStateOf(art.type)
+    }
+    val stateState = rememberSaveable {
+        mutableStateOf(art.state)
     }
     Scaffold(topBar = {
         Column {
@@ -83,29 +89,110 @@ fun ArtScreen(
                 .background(MaterialTheme.colors.backgroundColor)
                 .padding(10.dp)
                 .fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            textState.value?.let { it1 ->
-                TextField(
-                    value = it1,
-                    onValueChange = { txt ->
-                        textState.value = txt
-                    },
-                    modifier = Modifier
-                        .background(Color.Gray)
-                        .padding(10.dp),
-                    textStyle = TextStyle(
-                        fontSize = 20.sp
-                    )
-                )
-            }
             Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth(1f)
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.padding(10.dp)
             ) {
+                Text(
+                    text = "Title : ",
+                    color = Color.White,
+                    modifier = Modifier.defaultMinSize(100.dp),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold
+                )
+                textState.value?.let { it1 ->
+                    TextField(
+                        value = it1,
+                        onValueChange = { txt ->
+                            textState.value = txt
+                        },
+                        textStyle = TextStyle(
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colors.blackText
+                        ),
+                        modifier = Modifier
+                            .background(Color.White)
+                    )
+                }
+            }
+            // typeDropDownMenu(typeState)
+            // stateDropDownMenu(stateState)
+        }
+    }
+}
 
+@Composable
+fun typeDropDownMenu (typeState: MutableState<String?>){
+    val typeItems = listOf<String>(
+        "Book",
+        "Manga",
+        "Anime",
+        "Film"
+    )
+    var selectedIndex by remember { mutableStateOf(0) }
+    var expanded by remember { mutableStateOf(false) }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(10.dp)
+    ) {
+        Text(
+            text = "Type : ",
+            color = Color.White,
+            modifier = Modifier.defaultMinSize(100.dp),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        typeState.value?.let { it1 ->
+            DropdownMenu(
+                expanded = true,
+                onDismissRequest = { expanded = false },
+                modifier = Modifier
+                    .background(Color.White)
+            ){
+                typeItems.forEachIndexed{ index, s ->
+                    DropdownMenuItem(onClick = {
+                        selectedIndex = index
+                        expanded = false
+                    }) {
+                        Text(text = s)
+                    }
+                }
             }
         }
     }
 }
+
+/* @Composable
+fun stateDropDownMenu (stateState: State<String?>) {
+    val stateItems = listOf<String>(
+        "Done",
+        "ToDo",
+        "Current",
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(10.dp)
+    ) {
+        Text(
+            text = "State : ",
+            color = Color.White,
+            modifier = Modifier.defaultMinSize(100.dp),
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
+        stateState.value?.let { it1 ->
+            TextField(
+                value = it1,
+                onValueChange = { txt ->
+                    stateState.value = txt
+                },
+                textStyle = TextStyle(
+                    fontSize = 20.sp
+                ),
+                modifier = Modifier
+                    .background(Color.White)
+            )
+        }
+    }
+} */

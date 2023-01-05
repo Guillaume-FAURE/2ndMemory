@@ -14,3 +14,5 @@ val Colors.backgroundFirstNavBar: Color
     get() = Color(0xFFBDBDBD)
 val Colors.backgroundSecondNavBar: Color
     get() = Color(0xFF3C3C3C)
+val Colors.blackText: Color
+    get() = Color(0xFF0a0505)
