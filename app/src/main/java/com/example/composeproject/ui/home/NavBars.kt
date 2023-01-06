@@ -40,7 +40,7 @@ fun FirstNavBar(){
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
         Image(
-            painter = painterResource(id = R.drawable.brain),
+            painter = painterResource(id = R.drawable.brainwhite),
             contentDescription = "logoAppBrainWhite",
             modifier = Modifier
                 .fillMaxHeight(1f)
@@ -52,7 +52,7 @@ fun FirstNavBar(){
             fontWeight = FontWeight.Black,
             fontFamily = FontFamily.Default,
             letterSpacing = 2.sp,
-            color = MaterialTheme.colors.blackText,
+            color = Color.White,
         )
         OutlinedButton(onClick =
         { /* context.startActivity(Intent(context, ParameterPage::class.java)) */ },
@@ -66,7 +66,7 @@ fun FirstNavBar(){
             border = BorderStroke(0.dp, Color.Transparent)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.parameter),
+                painter = painterResource(id = R.drawable.parameterwhite),
                 contentDescription = "parameterWhite",
                 modifier = Modifier.fillMaxHeight(1f)
             )

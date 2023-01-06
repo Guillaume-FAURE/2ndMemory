@@ -9,10 +9,10 @@ val Purple700 = Color(0xFF3700B3)
 val Teal200 = Color(0xFF03DAC5)
 
 val Colors.backgroundColor: Color
-    get() = Color(0xFF252525)
+    get() = if (isLight) Color(0xFF252525) else Color(0xFF252525)
 val Colors.backgroundFirstNavBar: Color
-    get() = Color(0xFFBDBDBD)
+    get() = Color(0xFF000000)
 val Colors.backgroundSecondNavBar: Color
     get() = Color(0xFF3C3C3C)
 val Colors.blackText: Color
-    get() = Color(0xFF0a0505)
+    get() = if (isLight) Color(0xFF252525) else Color(0xFF252525)

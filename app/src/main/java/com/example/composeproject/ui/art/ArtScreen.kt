@@ -1,6 +1,9 @@
 package com.example.composeproject.ui.art
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -10,18 +13,20 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.unit.toSize
 import com.example.composeproject.R
 import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.home.FirstNavBar
 import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.ui.theme.backgroundSecondNavBar
-import com.example.composeproject.ui.theme.blackText
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
+import androidx.compose.ui.platform.LocalDensity
 
 @Composable
 fun ArtScreen(
@@ -59,7 +64,12 @@ fun ArtScreen(
                 actions = {
                     IconButton(onClick = {
                         art.let {
-                            homeViewModel.addOrUpdateArt(it.copy(title = textState.value))
+                            homeViewModel.addOrUpdateArt(
+                                it.copy(
+                                    title = textState.value,
+                                    type = typeState.value,
+                                    state = stateState.value
+                                ))
                             onClickClose()
                         }
                     }) {
@@ -109,29 +119,32 @@ fun ArtScreen(
                         },
                         textStyle = TextStyle(
                             fontSize = 20.sp,
-                            color = MaterialTheme.colors.blackText
+                            color = Color.White
                         ),
                         modifier = Modifier
-                            .background(Color.White)
+                            .background(MaterialTheme.colors.backgroundColor)
+                            .border(2.dp, Color.White)
                     )
                 }
             }
-            // typeDropDownMenu(typeState)
-            // stateDropDownMenu(stateState)
+            TypeDropDownMenu(typeState)
+            StateDropDownMenu(stateState)
         }
     }
 }
 
 @Composable
-fun typeDropDownMenu (typeState: MutableState<String?>){
-    val typeItems = listOf<String>(
+fun TypeDropDownMenu (typeState: MutableState<String?>){
+    val typeItems = listOf(
         "Book",
         "Manga",
         "Anime",
         "Film"
     )
-    var selectedIndex by remember { mutableStateOf(0) }
-    var expanded by remember { mutableStateOf(false) }
+    val stateHolder = rememberExposedMenuStateHolder(typeItems)
+    if (stateHolder.value == ""){
+        stateHolder.value = typeState.value.toString()
+    }
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(10.dp)
@@ -143,37 +156,84 @@ fun typeDropDownMenu (typeState: MutableState<String?>){
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        typeState.value?.let { it1 ->
+        Column {
+            Box {
+                typeState.value?.let {
+                    OutlinedTextField(
+                        value = stateHolder.value,
+                        onValueChange = {
+                            typeState.value = stateHolder.value
+                        },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = stateHolder.icon,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.clickable {
+                                    stateHolder.onEnabled(!(stateHolder.enabled))
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .onGloballyPositioned {
+                                stateHolder.onSize(it.size.toSize())
+                            }
+                            .background(MaterialTheme.colors.backgroundColor)
+                            .border(2.dp, Color.White)
+                            .clickable(
+                                indication = null,
+                                interactionSource = MutableInteractionSource(),
+                                onClick = {
+                                    stateHolder.onEnabled(true)
+                                }
+                            ),
+                        readOnly = true,
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontSize = 20.sp,
+                        ),
+                        enabled = false,
+                    )
+                }
+            }
             DropdownMenu(
-                expanded = true,
-                onDismissRequest = { expanded = false },
-                modifier = Modifier
-                    .background(Color.White)
-            ){
-                typeItems.forEachIndexed{ index, s ->
-                    DropdownMenuItem(onClick = {
-                        selectedIndex = index
-                        expanded = false
-                    }) {
+                expanded = stateHolder.enabled,
+                onDismissRequest = {
+                    stateHolder.onEnabled(false)
+                },
+                modifier = Modifier.width(with(LocalDensity.current){stateHolder.size.width.toDp()})
+            ) {
+                stateHolder.items.forEachIndexed { index, s ->
+                    DropdownMenuItem(
+                        onClick = {
+                            stateHolder.onSelectedIndex(index)
+                            stateHolder.onEnabled(false)
+                        }
+                    ) {
                         Text(text = s)
                     }
                 }
+
             }
         }
     }
 }
 
-/* @Composable
-fun stateDropDownMenu (stateState: State<String?>) {
-    val stateItems = listOf<String>(
+@Composable
+fun StateDropDownMenu (stateState: MutableState<String?>) {
+    val stateItems = listOf(
         "Done",
         "ToDo",
         "Current",
     )
-    Row(
+    val stateHolder = rememberExposedMenuStateHolder(stateItems)
+    if (stateHolder.value == ""){
+        stateHolder.value = stateState.value.toString()
+    }
+    Row (
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.padding(10.dp)
-    ) {
+    ){
         Text(
             text = "State : ",
             color = Color.White,
@@ -181,18 +241,65 @@ fun stateDropDownMenu (stateState: State<String?>) {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        stateState.value?.let { it1 ->
-            TextField(
-                value = it1,
-                onValueChange = { txt ->
-                    stateState.value = txt
+        Column {
+            Box {
+                stateState.value?.let {
+                    OutlinedTextField(
+                        value = stateHolder.value,
+                        onValueChange = {
+                            stateState.value = stateHolder.value
+                        },
+                        trailingIcon = {
+                            Icon(
+                                imageVector = stateHolder.icon,
+                                contentDescription = null,
+                                tint = Color.White,
+                                modifier = Modifier.clickable {
+                                    stateHolder.onEnabled(!(stateHolder.enabled))
+                                }
+                            )
+                        },
+                        modifier = Modifier
+                            .onGloballyPositioned {
+                                stateHolder.onSize(it.size.toSize())
+                            }
+                            .background(MaterialTheme.colors.backgroundColor)
+                            .border(2.dp, Color.White)
+                            .clickable(
+                                indication = null,
+                                interactionSource = MutableInteractionSource(),
+                                onClick = {
+                                    stateHolder.onEnabled(true)
+                                }
+                            ),
+                        readOnly = true,
+                        textStyle = TextStyle(
+                            color = Color.White,
+                            fontSize = 20.sp,
+                        ),
+                        enabled = false
+                    )
+                }
+            }
+            DropdownMenu(
+                expanded = stateHolder.enabled,
+                onDismissRequest = {
+                    stateHolder.onEnabled(false)
                 },
-                textStyle = TextStyle(
-                    fontSize = 20.sp
-                ),
-                modifier = Modifier
-                    .background(Color.White)
-            )
+                modifier = Modifier.width(with(LocalDensity.current){stateHolder.size.width.toDp()})
+            ) {
+                stateHolder.items.forEachIndexed { index, s ->
+                    DropdownMenuItem(
+                        onClick = {
+                            stateHolder.onSelectedIndex(index)
+                            stateHolder.onEnabled(false)
+                        }
+                    ) {
+                        Text(text = s)
+                    }
+                }
+
+            }
         }
     }
-} */
+}
