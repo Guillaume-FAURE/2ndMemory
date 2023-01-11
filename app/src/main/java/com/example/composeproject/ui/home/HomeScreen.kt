@@ -9,6 +9,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.composeproject.data.remote.SearchAnimeApi
 import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
@@ -24,6 +25,9 @@ fun HomeScreen(
 
 ){
     val artListState = homeViewModel.artList.collectAsState(initial = listOf())
+    val currentArtList = artListState.value.filter{
+        art -> art.state == "Current"
+    }
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
@@ -48,12 +52,11 @@ fun HomeScreen(
                     onClickToDo,
                 )
                 ListArt(
-                    artListState,
+                    currentArtList,
                     artIdState,
                     textState,
                     homeViewModel,
                     onClickArt,
-
                 )
                 Spacer(modifier = Modifier.padding(100.dp))
             }

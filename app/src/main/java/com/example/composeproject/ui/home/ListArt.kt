@@ -32,7 +32,7 @@ import com.example.composeproject.viewmodel.HomeViewModelAbstract
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun ListArt(
-    arrayArt: State<List<ArtEntity>>,
+    arrayArt: List<ArtEntity>,
     artIdState: MutableState<Int>,
     textState: MutableState<String>,
     homeViewModel: HomeViewModelAbstract,
@@ -45,7 +45,7 @@ fun ListArt(
             .height(600.dp)
     ) {
         items(
-            items = arrayArt.value,
+            items = arrayArt,
             key = {it.artId ?: ""}
         ){
                 art ->
@@ -112,6 +112,14 @@ fun ArtCard(
             )
             Text(
                 text = art.description ?: "unknownDescription",
+                color = Color.White
+            )
+            Text(
+                text = art.type ?: "UnknownType",
+                color = Color.White
+            )
+            Text (
+                text = art.state ?: "UnknownState",
                 color = Color.White
             )
         }

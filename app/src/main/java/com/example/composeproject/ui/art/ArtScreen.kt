@@ -1,8 +1,7 @@
 package com.example.composeproject.ui.art
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import android.util.Log
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -27,6 +26,23 @@ import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.ui.theme.backgroundSecondNavBar
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.input.TextFieldValue
+import coil.compose.AsyncImage
+import com.example.composeproject.data.remote.AnimeDataDto
+import com.example.composeproject.data.remote.AnimeNode
+import com.example.composeproject.data.remote.SearchAnimeApi
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.squareup.moshi.Json
+import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 @Composable
 fun ArtScreen(
@@ -43,6 +59,7 @@ fun ArtScreen(
     val stateState = rememberSaveable {
         mutableStateOf(art.state)
     }
+    var animeSearch: List<AnimeDataDto>
     Scaffold(topBar = {
         Column {
             FirstNavBar()
@@ -129,6 +146,7 @@ fun ArtScreen(
             }
             TypeDropDownMenu(typeState)
             StateDropDownMenu(stateState)
+            APISearchAnime()
         }
     }
 }
@@ -161,9 +179,7 @@ fun TypeDropDownMenu (typeState: MutableState<String?>){
                 typeState.value?.let {
                     OutlinedTextField(
                         value = stateHolder.value,
-                        onValueChange = {
-                            typeState.value = stateHolder.value
-                        },
+                        onValueChange = {},
                         trailingIcon = {
                             Icon(
                                 imageVector = stateHolder.icon,
@@ -207,6 +223,7 @@ fun TypeDropDownMenu (typeState: MutableState<String?>){
                     DropdownMenuItem(
                         onClick = {
                             stateHolder.onSelectedIndex(index)
+                            typeState.value = stateHolder.value
                             stateHolder.onEnabled(false)
                         }
                     ) {
@@ -246,9 +263,7 @@ fun StateDropDownMenu (stateState: MutableState<String?>) {
                 stateState.value?.let {
                     OutlinedTextField(
                         value = stateHolder.value,
-                        onValueChange = {
-                            stateState.value = stateHolder.value
-                        },
+                        onValueChange = {},
                         trailingIcon = {
                             Icon(
                                 imageVector = stateHolder.icon,
@@ -292,6 +307,7 @@ fun StateDropDownMenu (stateState: MutableState<String?>) {
                     DropdownMenuItem(
                         onClick = {
                             stateHolder.onSelectedIndex(index)
+                            stateState.value = stateHolder.value
                             stateHolder.onEnabled(false)
                         }
                     ) {
@@ -302,4 +318,145 @@ fun StateDropDownMenu (stateState: MutableState<String?>) {
             }
         }
     }
+}
+
+@Composable
+fun APISearchAnime(){
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val id = remember { mutableStateOf(TextFieldValue()) }
+
+        val listAnime = remember { mutableStateListOf<AnimeDataDto>(AnimeDataDto(
+            id=0,
+            title="",
+            pictureURL = ""
+        ))
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        TextField(
+            value = id.value,
+            onValueChange = { id.value = it },
+            textStyle = TextStyle(
+                fontSize = 20.sp,
+                color = Color.White
+            ),
+            modifier = Modifier
+                .background(MaterialTheme.colors.backgroundColor)
+                .border(2.dp, Color.White)
+        )
+
+        Spacer(modifier = Modifier.height(15.dp))
+
+        Box(modifier = Modifier.padding(40.dp, 0.dp, 40.dp, 0.dp)) {
+            Button(
+                onClick = {
+                    val data = sendRequest(
+                        id = id.value.text,
+                        listAnime = listAnime
+                    )
+                    Log.d("Main Activity", listAnime.toString())
+                }
+            ) {
+                Text(text = "Get Data")
+            }
+        }
+
+        Spacer(modifier = Modifier.height(15.dp))
+        Column(
+            modifier = Modifier
+                .verticalScroll(state = rememberScrollState())
+        ) {
+            if (listAnime[0].id!=0){
+                listAnime.forEach{
+                        animeDataDto ->
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(10.dp)
+                            .border(1.dp, Color.White)
+                            .fillMaxWidth()
+                            .clickable(
+                                indication = null,
+                                interactionSource = MutableInteractionSource(),
+                                onClick = {
+                                    getInformationFromAnime(animeDataDto.id)
+                                }
+                            )
+                    ){
+                        AsyncImage(
+                            model = animeDataDto.pictureURL,
+                            contentDescription = "imageAnime",
+                            modifier = Modifier.padding(10.dp)
+                        )
+                        Text(
+                            text = animeDataDto.title,
+                            color = Color.White,
+                            modifier = Modifier
+                                .defaultMinSize(100.dp)
+                                .padding(10.dp),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+fun sendRequest(
+    id: String,
+    listAnime: MutableList<AnimeDataDto>
+) {
+    Log.d("SendRequest", "Initialization")
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.myanimelist.net/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+    Log.d("SendRequest", "APIBuild")
+    val api = retrofit.create(SearchAnimeApi::class.java)
+
+    val call: Call<ResponseBody> = api.getAnimeId(id);
+    Log.d("SendRequest", "Before call")
+    if (call != null) {
+        Log.d("SendRequest", "call != null")
+        call.enqueue(object: Callback<ResponseBody> {
+            override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
+                if(response.isSuccessful) {
+                    // Log.d("SendRequest", "Response Received : " + (response.body()?.string() ?: "Error"))
+                    val sType = object : TypeToken<List<AnimeNode>>() { }.type
+                    val animeJson = JSONObject(response.body()?.string()).getJSONArray("data").toString()
+                    if (animeJson != null) {
+                        Log.d("SendRequest", "JSON :$animeJson")
+                    }
+                    val animeArray = Gson().fromJson<List<AnimeNode>>(animeJson, sType)
+                    Log.d("SendRequest", "AnimeArray : $animeArray")
+                    listAnime.removeAll(listAnime)
+                    animeArray.forEach{
+                        anime -> listAnime.add(AnimeDataDto(
+                                id = anime.node.id,
+                                title = anime.node.title,
+                                pictureURL = anime.node.main_picture.medium
+                            ))
+                    }
+                    Log.d("SendRequest", "Array : $listAnime")
+                }
+            }
+
+            override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
+                Log.e("Main", "Failed mate " + t.message.toString())
+            }
+        })
+    }
+    else {
+        Log.d("SendRequest", "call = null")
+    }
+}
+
+fun getInformationFromAnime(id: Int){
+    
 }

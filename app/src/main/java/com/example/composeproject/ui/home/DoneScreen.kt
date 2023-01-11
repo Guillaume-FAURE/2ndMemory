@@ -22,6 +22,9 @@ fun DoneScreen(
     onClickDone: () -> Unit,
 ){
     val artListState = homeViewModel.artList.collectAsState(initial = listOf())
+    val doneArtList = artListState.value.filter{
+            art -> art.state == "Done"
+    }
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
@@ -46,7 +49,7 @@ fun DoneScreen(
                     onClickToDo,
                 )
                 ListArt(
-                    artListState,
+                    doneArtList,
                     artIdState,
                     textState,
                     homeViewModel,
