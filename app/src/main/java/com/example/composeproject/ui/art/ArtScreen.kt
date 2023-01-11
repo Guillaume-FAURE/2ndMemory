@@ -458,5 +458,5 @@ fun sendRequest(
 }
 
 fun getInformationFromAnime(id: Int){
-    
+
 }
