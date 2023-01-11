@@ -28,7 +28,17 @@ fun DoneScreen(
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
-    Scaffold {
+    Scaffold(
+        topBar = { FirstNavBar() },
+        bottomBar = {
+            SecondNavBar(
+                2,
+                onClickHome,
+                onClickDone,
+                onClickToDo,
+            )
+        }
+    ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -41,13 +51,6 @@ fun DoneScreen(
                 .border(1.dp, Color.Black),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally) {
-                FirstNavBar()
-                SecondNavBar(
-                    2,
-                    onClickHome,
-                    onClickDone,
-                    onClickToDo,
-                )
                 ListArt(
                     doneArtList,
                     artIdState,

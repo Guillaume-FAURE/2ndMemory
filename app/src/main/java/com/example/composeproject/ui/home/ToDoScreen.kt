@@ -29,7 +29,17 @@ fun ToDoScreen(
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
-    Scaffold {
+    Scaffold(
+        topBar = { FirstNavBar() },
+        bottomBar = {
+            SecondNavBar(
+                3,
+                onClickHome,
+                onClickDone,
+                onClickToDo,
+            )
+        }
+    ) {
         Column(
             modifier = Modifier
             .fillMaxWidth()
@@ -45,13 +55,6 @@ fun ToDoScreen(
                 .border(1.dp, Color.Black),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                FirstNavBar()
-                SecondNavBar(
-                    3,
-                    onClickHome,
-                    onClickDone,
-                    onClickToDo,
-                )
                 ListArt(
                     toDoArtList,
                     artIdState,
@@ -65,18 +68,19 @@ fun ToDoScreen(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.95f),
+            .fillMaxHeight(0.87f),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.Bottom
     ) {
         Button(onClick = {
             val art = ArtEntity(
-                author = "Unknown",
+                author = "",
                 title = "",
-                description = "Unknown",
-                mark = "?/10",
-                state = "ToDo",
-                type = "Manga",
+                description = "",
+                mark = "",
+                state = "",
+                type = "",
+                picture = "",
             )
             homeViewModel.selectArt(art)
             onClickArt(art)

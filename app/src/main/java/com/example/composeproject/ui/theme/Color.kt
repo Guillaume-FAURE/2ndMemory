@@ -11,8 +11,6 @@ val Teal200 = Color(0xFF03DAC5)
 val Colors.backgroundColor: Color
     get() = if (isLight) Color(0xFF252525) else Color(0xFF252525)
 val Colors.backgroundFirstNavBar: Color
-    get() = Color(0xFF000000)
+    get() = if (isLight) Color(0xFF000000) else Color(0xFF000000)
 val Colors.backgroundSecondNavBar: Color
-    get() = Color(0xFF3C3C3C)
-val Colors.blackText: Color
-    get() = if (isLight) Color(0xFF252525) else Color(0xFF252525)
+    get() = if (isLight) Color(0xFF3C3C3C) else Color(0xFF3C3C3C)

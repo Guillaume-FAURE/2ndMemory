@@ -1,8 +1,5 @@
 package com.example.composeproject.data.repository
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
 import com.example.composeproject.data.ArtDAO
 import com.example.composeproject.model.ArtEntity
 import kotlinx.coroutines.flow.Flow

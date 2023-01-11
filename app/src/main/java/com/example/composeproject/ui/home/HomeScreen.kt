@@ -1,5 +1,6 @@
 package com.example.composeproject.ui.home
 
+import android.content.Intent
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,13 +9,12 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.example.composeproject.data.remote.SearchAnimeApi
 import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.theme.backgroundColor
 import com.example.composeproject.viewmodel.HomeViewModelAbstract
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     homeViewModel: HomeViewModelAbstract,
@@ -31,7 +31,17 @@ fun HomeScreen(
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
 
-    Scaffold {
+    Scaffold(
+        topBar = { FirstNavBar() },
+        bottomBar = {
+            SecondNavBar(
+                1,
+                onClickHome,
+                onClickDone,
+                onClickToDo,
+            )
+        }
+    ) {
         Column(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
@@ -44,13 +54,6 @@ fun HomeScreen(
                 .border(1.dp, Color.Black),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally) {
-                FirstNavBar()
-                SecondNavBar(
-                    1,
-                    onClickHome,
-                    onClickDone,
-                    onClickToDo,
-                )
                 ListArt(
                     currentArtList,
                     artIdState,

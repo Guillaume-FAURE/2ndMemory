@@ -1,8 +1,7 @@
 package com.example.composeproject.ui.home
 
+import android.content.Intent
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
@@ -15,15 +14,18 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.composeproject.model.ArtEntity
 import com.example.composeproject.ui.theme.backgroundColor
@@ -81,61 +83,97 @@ fun ArtCard(
     homeViewModel: HomeViewModelAbstract,
     onClickArt: (ArtEntity) -> Unit
 ){
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(1f)
-            .pointerInput(Unit) {
-                detectTapGestures(
-                    onTap = {
-                        // popupState.value = PopupState.Edit
-                        artIdState.value = art.artId!!
-                        textState.value = art.title!!
-                        homeViewModel.selectArt(art)
-                        onClickArt(art)
-                    },
-                )
-            }
-            .background(MaterialTheme.colors.backgroundColor),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-        AsyncImage(model = "https://www.sfbok.se/sites/default/files/styles/1000x/sfbok/sfbokbilder/07/7481.jpg?bust=1481208506&itok=yVBceX0q",
-            contentDescription = "image")
-        Column {
-            Text(
-                text = art.author ?: "unknownAuthor",
-                color = Color.White
-            )
-            Text(
-                text = art.title ?: "unknownTitle",
-                color = Color.White
-            )
-            Text(
-                text = art.description ?: "unknownDescription",
-                color = Color.White
-            )
+    val context = LocalContext.current
+    val sendIntent: Intent = Intent().apply {
+        action = Intent.ACTION_SEND
+        putExtra(Intent.EXTRA_TEXT,
+            "Title : ${art.title}\n" + "Author: ${art.author}\n" + "Description: ${art.description}\n"
+        )
+        type = "text/plain"
+    }
+    val shareIntent = Intent.createChooser(sendIntent, "Share anime_information")
+
+    Column() {
+        Row {
+            Spacer(modifier = Modifier
+                .width(20.dp)
+                .fillMaxHeight())
             Text(
                 text = art.type ?: "UnknownType",
-                color = Color.White
-            )
-            Text (
-                text = art.state ?: "UnknownState",
-                color = Color.White
+                color = Color.White,
+                fontSize = 25.sp
             )
         }
-        Column {
-            Text(
-                text = art.mark ?: "unknownMark",
-                color = Color.White
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(1f)
+                .pointerInput(Unit) {
+                    detectTapGestures(
+                        onTap = {
+                            // popupState.value = PopupState.Edit
+                            artIdState.value = art.artId!!
+                            textState.value = art.title!!
+                            homeViewModel.selectArt(art)
+                            onClickArt(art)
+                        },
+                        onLongPress = {
+                            context.startActivity(shareIntent)
+                        }
+                    )
+                }
+                .height(150.dp)
+                .background(MaterialTheme.colors.backgroundColor)
+                .drawBehind {
+                    val strokeWidth = 3.0.toFloat()
+                    val y = size.height
+                    drawLine(
+                        Color.LightGray,
+                        Offset(0f, y),
+                        Offset(size.width, y),
+                        strokeWidth
+                    )
+                },
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            AsyncImage(
+                model = art.picture,
+                contentDescription = "image",
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(10.dp)
             )
-            Button(onClick = { /*TODO*/ }) {
-
+            Column(
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text(
+                    text = "Author : " + (art.author ?: "unknownAuthor"),
+                    color = Color.White
+                )
+                Text(
+                    text = "Title : " + (art.title ?: "unknownTitle"),
+                    color = Color.White
+                )
+                Text(
+                    text = art.description ?: "unknownDescription",
+                    color = Color.White,
+                    maxLines = 3,
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                )
             }
-            Button(onClick = { /*TODO*/ }) {
-
+            Column(
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .padding(10.dp)
+            ) {
+                Text(
+                    text = art.mark.toString() ?: "unknownMark",
+                    color = Color.White
+                )
             }
         }
     }
+
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -158,11 +196,6 @@ fun SwipeToDismissArtCard (
                     DismissValue.DismissedToEnd -> Color.Red
                     DismissValue.DismissedToStart -> Color.Red
                 }
-            )
-            val alignment = Alignment.CenterEnd
-            val icon = Icons.Default.Delete
-            val scale by animateFloatAsState(
-                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
             )
             Box(
                 modifier = Modifier

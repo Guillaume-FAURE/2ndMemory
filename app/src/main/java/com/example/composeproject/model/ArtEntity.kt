@@ -5,18 +5,18 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import java.util.*
 
 @Entity(tableName = "art")
 data class ArtEntity(
-    @PrimaryKey(autoGenerate = true) val artId: Int? = null,
-    @ColumnInfo(name = "author") val author: String?,
-    @ColumnInfo(name = "title") val title: String?,
-    @ColumnInfo(name = "description") val description: String?,
-    @ColumnInfo(name = "mark") val mark: String?,
-    @ColumnInfo(name = "type") val type: String?,
-    @ColumnInfo(name = "state") val state: String?,
-    @ColumnInfo(name = "createdDate") val createdDate:String? = getCreatedDate(),
+    @PrimaryKey(autoGenerate = true) var artId: Int? = null,
+    @ColumnInfo(name = "author") var author: String?,
+    @ColumnInfo(name = "title") var title: String?,
+    @ColumnInfo(name = "description") var description: String?,
+    @ColumnInfo(name = "mark") var mark: String?,
+    @ColumnInfo(name = "type") var type: String?,
+    @ColumnInfo(name = "picture") var picture: String?,
+    @ColumnInfo(name = "state") var state: String?,
+    @ColumnInfo(name = "createdDate") var createdDate:String? = getCreatedDate(),
 ) {
     companion object {
 

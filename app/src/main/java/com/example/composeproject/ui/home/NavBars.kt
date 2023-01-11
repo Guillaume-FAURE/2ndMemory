@@ -1,5 +1,6 @@
 package com.example.composeproject.ui.home
 
+import ConnectionLiveData
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -8,14 +9,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.AddTask
-import androidx.compose.material.icons.rounded.Done
-import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -24,20 +27,28 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeproject.R
+import com.example.composeproject.ui.art.isOnline
 import com.example.composeproject.ui.theme.backgroundFirstNavBar
 import com.example.composeproject.ui.theme.backgroundSecondNavBar
-import com.example.composeproject.ui.theme.blackText
+
+lateinit var connectionLiveData: ConnectionLiveData
 
 @Composable
 fun FirstNavBar(){
-    // val context = LocalContext.current
+    val context = LocalContext.current
+    val online = remember {
+        mutableStateOf(true)
+    }
+    connectionLiveData=ConnectionLiveData(context)
+    val isOnline = connectionLiveData.observeAsState()
+
     Row(
         modifier = Modifier
             .background(MaterialTheme.colors.backgroundFirstNavBar)
             .fillMaxWidth(1f)
             .height(72.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         Image(
             painter = painterResource(id = R.drawable.brainwhite),
@@ -53,6 +64,11 @@ fun FirstNavBar(){
             fontFamily = FontFamily.Default,
             letterSpacing = 2.sp,
             color = Color.White,
+        )
+        Spacer(
+            modifier = Modifier
+                .width(20.dp)
+                .fillMaxHeight()
         )
         OutlinedButton(onClick =
         { /* context.startActivity(Intent(context, ParameterPage::class.java)) */ },
@@ -71,6 +87,23 @@ fun FirstNavBar(){
                 modifier = Modifier.fillMaxHeight(1f)
             )
         }
+        val wifiIcon = if(isOnline.value==true){
+            Icons.Rounded.Wifi
+        }
+        else {
+            Icons.Rounded.WifiOff
+        }
+        Icon(
+            imageVector = wifiIcon,
+            contentDescription = "WifiOn",
+            tint = Color.White,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        )
+        Spacer(modifier = Modifier
+            .fillMaxHeight()
+        )
     }
 }
 
