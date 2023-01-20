@@ -30,7 +30,6 @@ fun HomeScreen(
     }
     val textState = rememberSaveable { mutableStateOf("") }
     val artIdState = rememberSaveable { mutableStateOf(0) }
-
     Scaffold(
         topBar = { FirstNavBar() },
         bottomBar = {
