@@ -87,10 +87,8 @@ fun ArtScreen(
 @Composable
 fun TypeDropDownMenu (typeState: MutableState<String?>){
     val typeItems = listOf(
-        "Book",
         "Manga",
-        "Anime",
-        "Film"
+        "Anime"
     )
     val stateHolder = rememberExposedMenuStateHolder(typeItems)
     if (stateHolder.value == ""){
