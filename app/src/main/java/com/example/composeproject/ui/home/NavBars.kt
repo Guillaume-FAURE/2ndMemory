@@ -70,23 +70,6 @@ fun FirstNavBar(){
                 .width(20.dp)
                 .fillMaxHeight()
         )
-        OutlinedButton(onClick =
-        { /* context.startActivity(Intent(context, ParameterPage::class.java)) */ },
-            modifier = Modifier
-                .padding(10.dp)
-                .shadow(0.dp)
-                .fillMaxHeight(1f),
-            colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Transparent
-            ),
-            border = BorderStroke(0.dp, Color.Transparent)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.parameterwhite),
-                contentDescription = "parameterWhite",
-                modifier = Modifier.fillMaxHeight(1f)
-            )
-        }
         val wifiIcon = if(isOnline.value==true){
             Icons.Rounded.Wifi
         }

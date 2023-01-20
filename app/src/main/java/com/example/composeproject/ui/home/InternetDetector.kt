@@ -42,10 +42,10 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
     private fun createNetworkCallback() = object : ConnectivityManager.NetworkCallback() {
 
         override fun onAvailable(network: Network) {
-            Log.d(TAG, "onAvailable: $network")
+            //Log.d(TAG, "onAvailable: $network")
             val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
             val hasInternetCapability = networkCapabilities?.hasCapability(NET_CAPABILITY_INTERNET)
-            Log.d(TAG, "onAvailable: ${network}, $hasInternetCapability")
+            //Log.d(TAG, "onAvailable: ${network}, $hasInternetCapability")
 
             if (hasInternetCapability == true) {
                 // Check if this network actually has internet
@@ -53,7 +53,7 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
                     val hasInternet = DoesNetworkHaveInternet.execute(network.socketFactory)
                     if (hasInternet) {
                         withContext(Dispatchers.Main) {
-                            Log.d(TAG, "onAvailable: adding network. $network")
+                            //Log.d(TAG, "onAvailable: adding network. $network")
                             validNetworks.add(network)
                             checkValidNetworks()
                         }
@@ -74,14 +74,14 @@ class ConnectionLiveData(context: Context) : LiveData<Boolean>() {
         fun execute(socketFactory: SocketFactory): Boolean {
             // Make sure to execute this on a background thread.
             return try {
-                Log.d(TAG, "PINGING Google...")
+                //Log.d(TAG, "PINGING Google...")
                 val socket = socketFactory.createSocket() ?: throw IOException("Socket is null.")
                 socket.connect(InetSocketAddress("8.8.8.8", 53), 1500)
                 socket.close()
-                Log.d(TAG, "PING success.")
+                //Log.d(TAG, "PING success.")
                 true
             } catch (e: IOException) {
-                Log.e(TAG, "No Internet Connection. $e")
+                //Log.e(TAG, "No Internet Connection. $e")
                 false
             }
         }

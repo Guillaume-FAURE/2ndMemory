@@ -39,52 +39,28 @@ fun NavControllerPage(
                     composable(Screen.Home.name) {
                         HomeScreen(
                             homeViewModel = homeViewModel,
-                            onClickArt = {
-                                navController.navigate(Screen.Art.name)
-                            },
-                            onClickHome= {
-                                navController.navigate(Screen.Home.name)
-                            },
-                            onClickDone = {
-                                navController.navigate(Screen.Done.name)
-                            },
-                            onClickToDo = {
-                                navController.navigate(Screen.ToDo.name)
-                            },
+                            onClickArt = { navController.navigate(Screen.Art.name) },
+                            onClickHome= { navController.navigate(Screen.Home.name) },
+                            onClickDone = { navController.navigate(Screen.Done.name) },
+                            onClickToDo = { navController.navigate(Screen.ToDo.name) },
                         )
                     }
                     composable(Screen.Done.name) {
                         DoneScreen(
                             homeViewModel = homeViewModel,
-                            onClickArt = {
-                                navController.navigate(Screen.Art.name)
-                            },
-                            onClickHome= {
-                                navController.navigate(Screen.Home.name)
-                            },
-                            onClickDone = {
-                                navController.navigate(Screen.Done.name)
-                            },
-                            onClickToDo = {
-                                navController.navigate(Screen.ToDo.name)
-                            },
+                            onClickArt = { navController.navigate(Screen.Art.name) },
+                            onClickHome= { navController.navigate(Screen.Home.name) },
+                            onClickDone = { navController.navigate(Screen.Done.name) },
+                            onClickToDo = { navController.navigate(Screen.ToDo.name) },
                         )
                     }
                     composable(Screen.ToDo.name) {
                         ToDoScreen(
                             homeViewModel = homeViewModel,
-                            onClickArt = {
-                                navController.navigate(Screen.Art.name)
-                            },
-                            onClickHome= {
-                                navController.navigate(Screen.Home.name)
-                            },
-                            onClickDone = {
-                                navController.navigate(Screen.Done.name)
-                            },
-                            onClickToDo = {
-                                navController.navigate(Screen.ToDo.name)
-                            },
+                            onClickArt = { navController.navigate(Screen.Art.name) },
+                            onClickHome= { navController.navigate(Screen.Home.name) },
+                            onClickDone = { navController.navigate(Screen.Done.name) },
+                            onClickToDo = { navController.navigate(Screen.ToDo.name) },
                         )
                     }
                     composable(Screen.Art.name) {
@@ -92,9 +68,7 @@ fun NavControllerPage(
                         if (art != null) {
                             ArtScreen(
                                 art,
-                                onClickClose = {
-                                    navController.popBackStack()
-                                },
+                                onClickClose = { navController.popBackStack() },
                                 homeViewModel = homeViewModel
                             )
                         }
